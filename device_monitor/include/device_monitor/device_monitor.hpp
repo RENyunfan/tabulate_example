@@ -239,68 +239,33 @@ private:
         sleep(1);
     }
 
-    void Camera1Callback(const sensor_msgs::ImageConstPtr & msg){
-        const int device_id = 0;
-        devices_[device_id].last_call_back = msg->header.stamp;
+    void UpdateDeviceState(const int device_id,const ros::Time stamp){
+        devices_[device_id].last_call_back = stamp;
         static int cnt = 0;
         if(cnt++>=cfg_.sample_num){
             cnt = 0;
         }
         static ros::Time last_t = ros::Time::now();
-        double dt = (msg->header.stamp - last_t).toSec();
-        last_t = msg->header.stamp;
+        double dt = (stamp - last_t).toSec();
+        last_t =stamp;
         devices_[device_id].dt_queue[cnt] = dt;
+    }
 
+    void Camera1Callback(const sensor_msgs::ImageConstPtr & msg){
+        UpdateDeviceState(0,msg->header.stamp);
     }
     void Camera2Callback(const sensor_msgs::ImageConstPtr & msg){
-        const int device_id = 1;
-        devices_[device_id].last_call_back = msg->header.stamp;
-        static int cnt = 0;
-        if(cnt++>=cfg_.sample_num){
-            cnt = 0;
-        }
-        static ros::Time last_t = ros::Time::now();
-        double dt = (msg->header.stamp - last_t).toSec();
-        last_t = msg->header.stamp;
-        devices_[device_id].dt_queue[cnt] = dt;
+        UpdateDeviceState(1,msg->header.stamp);
     }
     void Camera3Callback(const sensor_msgs::ImageConstPtr & msg){
-        const int device_id = 2;
-        devices_[device_id].last_call_back = msg->header.stamp;
-        static int cnt = 0;
-        if(cnt++>=cfg_.sample_num){
-            cnt = 0;
-        }
-        static ros::Time last_t = ros::Time::now();
-        double dt = (msg->header.stamp - last_t).toSec();
-        last_t = msg->header.stamp;
-        devices_[device_id].dt_queue[cnt] = dt;
+        UpdateDeviceState(2,msg->header.stamp);
     }
     void Camera4Callback(const sensor_msgs::ImageConstPtr & msg){
-        const int device_id = 3;
-        devices_[device_id].last_call_back = msg->header.stamp;
-        static int cnt = 0;
-        if(cnt++>=cfg_.sample_num){
-            cnt = 0;
-        }
-        static ros::Time last_t = ros::Time::now();
-        double dt = (msg->header.stamp - last_t).toSec();
-        last_t = msg->header.stamp;
-        devices_[device_id].dt_queue[cnt] = dt;
+        UpdateDeviceState(3,msg->header.stamp);
     }
     void Camera5Callback(const sensor_msgs::ImageConstPtr & msg){
-        const int device_id = 4;
-        devices_[device_id].last_call_back = msg->header.stamp;
-        static int cnt = 0;
-        if(cnt++>=cfg_.sample_num){
-            cnt = 0;
-        }
-        static ros::Time last_t = ros::Time::now();
-        double dt = (msg->header.stamp - last_t).toSec();
-        last_t = msg->header.stamp;
-        devices_[device_id].dt_queue[cnt] = dt;
+        UpdateDeviceState(4,msg->header.stamp);
     }
-
 
 
     void clear() {
