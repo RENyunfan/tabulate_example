@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "test_node");
     ros::NodeHandle nh("~");
 
-    ros::Rate lp(10);
+    ros::Rate lp(30);
     ros::Publisher pub = nh.advertise<sensor_msgs::Image>("/test_interface/cam1",1);
     while(ros::ok()){
         sensor_msgs::Image img;

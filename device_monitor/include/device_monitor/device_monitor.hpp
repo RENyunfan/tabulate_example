@@ -20,7 +20,7 @@ private:
 
     struct DeviceState{
         ros::Time last_call_back{0};
-        double hz;
+        double hz,desired_hz;
         double* dt_queue;
         string name;
     };
@@ -87,24 +87,31 @@ public:
 
         LoadParam("apx_topic", cfg_.apx_topic, string("apx"));
 
-        LoadParam("print_hz", cfg_.desired_hz, 10.0);
+        LoadParam("camera_desired_hz", cfg_.camera_desired_hz, 30.0);
+        LoadParam("lidar_desired_hz", cfg_.lidar_desired_hz, 10.0);
+        LoadParam("apx_desired_hz", cfg_.apx_desired_hz, 10.0);
+
+        LoadParam("tolerance", cfg_.tolerance, 0.8);
+
         LoadParam("print_hz", cfg_.print_hz, 5.0);
         LoadParam("sample_num", cfg_.sample_num, 20);
+        LoadParam("sync_timeout", cfg_.sync_timeout, 5.0);
+        LoadParam("msg_timeout", cfg_.msg_timeout, 0.2);
 
         for(int i = 0 ; i < 10 ; i++){
             devices_[i].dt_queue = new double[cfg_.sample_num];
         }
-        devices_[0].name = "[Camera 1]: ";
-        devices_[1].name = "[Camera 2]: ";
-        devices_[2].name = "[Camera 3]: ";
-        devices_[3].name = "[Camera 4]: ";
-        devices_[4].name = "[Camera 5]: ";
+        devices_[0].name = "[Camera 1]: "; devices_[0].desired_hz = cfg_.camera_desired_hz;
+        devices_[1].name = "[Camera 2]: "; devices_[1].desired_hz = cfg_.camera_desired_hz;
+        devices_[2].name = "[Camera 3]: "; devices_[2].desired_hz = cfg_.camera_desired_hz;
+        devices_[3].name = "[Camera 4]: "; devices_[3].desired_hz = cfg_.camera_desired_hz;
+        devices_[4].name = "[Camera 5]: "; devices_[4].desired_hz = cfg_.camera_desired_hz;
 
-        devices_[5].name = "[Lidar 1]: ";
-        devices_[6].name = "[Lidar 2]: ";
-        devices_[7].name = "[Lidar 3]: ";
-        devices_[8].name = "[Lidar 4]: ";
-        devices_[9].name = "[Apx]: " ;
+        devices_[5].name = "[Lidar 1]: "; devices_[5].desired_hz = cfg_.lidar_desired_hz;
+        devices_[6].name = "[Lidar 2]: "; devices_[6].desired_hz = cfg_.lidar_desired_hz;
+        devices_[7].name = "[Lidar 3]: "; devices_[7].desired_hz = cfg_.lidar_desired_hz;
+        devices_[8].name = "[Lidar 4]: "; devices_[8].desired_hz = cfg_.lidar_desired_hz;
+        devices_[9].name = "[Apx]: " ; devices_[9].desired_hz = cfg_.apx_desired_hz;
 
 
 //        lidar1_sub = nh_.subscribe(cfg_.lidar1_topic, DeviceMonitor::)
@@ -171,7 +178,7 @@ private:
             if(devices_[i].last_call_back.toSec() < min_t){
                 min_t = devices_[i].last_call_back.toSec();
             }
-            if(IsTimeout(devices_[i].last_call_back, 5.0)){
+            if(IsTimeout(devices_[i].last_call_back, cfg_.msg_timeout)){
                 tex+=" NC";
                 monitor_.row(row).cell(cell).set_text(tex);
                 monitor_.row(row).cell(cell).format()
@@ -187,7 +194,7 @@ private:
                 tex+= ConverDoubleToString(devices_[i].hz,3);
                 tex+= " Hz";
                 monitor_.row(row).cell(cell).set_text(tex);
-                if(abs(devices_[i].hz - cfg_.desired_hz) < 0.8){
+                if(abs(devices_[i].hz - devices_[i].desired_hz) < cfg_.tolerance){
                     monitor_.row(row).cell(cell).format()
                             .font_background_color(Color::green)
                             .font_color(Color::white)  .font_align(FontAlign::center)
@@ -218,7 +225,7 @@ private:
                 .border_left(" ")
                 .border_right(" ")
                 .corner(" ").font_background_color(Color::blue).font_color(Color::white);
-        if(dt>0.5){
+        if(dt>cfg_.sync_timeout){
             monitor_.row(0).cell(1).format().border_top(" ")
                     .border_top(" ")
                     .border_bottom(" ")
@@ -290,9 +297,9 @@ private:
         string lidar1_topic,lidar2_topic,lidar3_topic,lidar4_topic;
         string apx_topic;
 
-        double desired_hz;
+        double camera_desired_hz,lidar_desired_hz,apx_desired_hz;
         double print_hz;
-
+        double sync_timeout,msg_timeout, tolerance;
         int sample_num{20};
     }cfg_;
 
