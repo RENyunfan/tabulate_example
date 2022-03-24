@@ -31,33 +31,10 @@ LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#pragma once
+#include <tabulate/termcolor.hpp>
 
-#ifndef TABULATE_EXPORT_HPP
-#define TABULATE_EXPORT_HPP
+namespace tabulate {
 
-// #ifdef _WIN32
-//     #ifdef TABULATE_STATIC_LIB
-//         #define TABULATE_API
-//     #else
-//         #ifdef TABULATE_EXPORTS
-//             #define TABULATE_API __declspec(dllexport)
-//         #else
-//             #define TABULATE_API __declspec(dllimport)
-//         #endif
-//     #endif
-// #else
-//     #define TABULATE_API
-// #endif
-
-// Project version
-#define TABULATE_VERSION_MAJOR 1
-#define TABULATE_VERSION_MINOR 4
-#define TABULATE_VERSION_PATCH 0
-
-// Composing the protocol version string from major, and minor
-#define TABULATE_CONCATENATE(A, B) TABULATE_CONCATENATE_IMPL(A, B)
-#define TABULATE_CONCATENATE_IMPL(A, B) A##B
-#define TABULATE_STRINGIFY(a) TABULATE_STRINGIFY_IMPL(a)
-#define TABULATE_STRINGIFY_IMPL(a) #a
-
-#endif
+enum class Color { none, grey, red, green, yellow, blue, magenta, cyan, white };
+}

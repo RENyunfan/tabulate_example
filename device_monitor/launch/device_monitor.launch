@@ -1,0 +1,6 @@
+<launch>
+
+    <node pkg="device_monitor" type="device_monitor" name="device_monitor" output="screen">
+        <rosparam command="load" file="$(find device_monitor)/config/depth_grid_cfg.yaml" />
+    </node>
+</launch>

@@ -1,27 +1,28 @@
-camera1_topic: "cam1"
-camera2_topic: "cam2"
-camera3_topic: "cam4"
-camera4_topic: "cam5"
-camera5_topic: "cam5"
+camera1_topic: "/Camera_B"
+camera2_topic: "/Camera_FL"
+camera3_topic: "/Camera_FR"
+camera4_topic: "/Camera_L"
+camera5_topic: "/Camera_R"
 
-lidar1_topic: "cam1"
-lidar2_topic: "cam1"
-lidar3_topic: "cam1"
-lidar4_topic: "cam1"
+lidar1_topic: "/livox/lidar_4UAD21BA13070V1"
+lidar2_topic: "/livox/lidar_4UAD21BA1307101"
+lidar3_topic: "/livox/lidar_4UAD21BA1307381"
+lidar4_topic: "/livox/lidar_4UAD21BH1307NJ1"
 
-apx_topic: "apx"
+apx_imu_topic: "/gnss_inertial/imu"
+apx_state_topic: "/gnss_inertial/navsatfix"
 
 # 表格刷新频率
-print_hz: 1
+print_hz: 5
 # 期望的数据频率
-camera_desired_hz: 30
+camera_desired_hz: 10
 lidar_desired_hz: 10
-apx_desired_hz: 10
-# 允许的频率抖动容差
+apx_desired_hz: 100
+# 允许的频率抖动容差，上下0.8Hz
 tolerance: 0.8
 # 平均滑窗的大小
-sample_num: 20
-# 同步丢失的timeout
+sample_num: 10
+# 同步丢失的timeout，消息时间戳之差大于0.2s，认为不同步
 sync_timeout: 0.2
-# 未受到消息，切换NC的timeout
-msg_timeout: 1.0
+# 在msg_timeout时间内未收到消息，切换NC
+msg_timeout: 59.0

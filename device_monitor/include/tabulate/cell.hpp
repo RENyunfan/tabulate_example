@@ -31,33 +31,47 @@ LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#pragma once
+#include <iostream>
+#include <memory>
+#include <string>
+#include <tabulate/format.hpp>
+#include <tabulate/utf8.hpp>
 
-#ifndef TABULATE_EXPORT_HPP
-#define TABULATE_EXPORT_HPP
-
-// #ifdef _WIN32
-//     #ifdef TABULATE_STATIC_LIB
-//         #define TABULATE_API
-//     #else
-//         #ifdef TABULATE_EXPORTS
-//             #define TABULATE_API __declspec(dllexport)
-//         #else
-//             #define TABULATE_API __declspec(dllimport)
-//         #endif
-//     #endif
-// #else
-//     #define TABULATE_API
-// #endif
-
-// Project version
-#define TABULATE_VERSION_MAJOR 1
-#define TABULATE_VERSION_MINOR 4
-#define TABULATE_VERSION_PATCH 0
-
-// Composing the protocol version string from major, and minor
-#define TABULATE_CONCATENATE(A, B) TABULATE_CONCATENATE_IMPL(A, B)
-#define TABULATE_CONCATENATE_IMPL(A, B) A##B
-#define TABULATE_STRINGIFY(a) TABULATE_STRINGIFY_IMPL(a)
-#define TABULATE_STRINGIFY_IMPL(a) #a
-
+#if __cplusplus >= 201703L
+#include <optional>
+using std::optional;
+#else
+#include <tabulate/optional_lite.hpp>
+using nonstd::optional;
 #endif
+
+#include <vector>
+
+namespace tabulate {
+
+class Cell {
+public:
+  explicit Cell(std::shared_ptr<class Row> parent) : parent_(parent) {}
+
+  void set_text(const std::string &text) { data_ = text; }
+
+  const std::string &get_text() { return data_; }
+
+  size_t size() {
+    return get_sequence_length(data_, locale(), is_multi_byte_character_support_enabled());
+  }
+
+  std::string locale() { return *format().locale_; }
+
+  Format &format();
+
+  bool is_multi_byte_character_support_enabled();
+
+private:
+  std::string data_;
+  std::weak_ptr<class Row> parent_;
+  optional<Format> format_;
+};
+
+} // namespace tabulate

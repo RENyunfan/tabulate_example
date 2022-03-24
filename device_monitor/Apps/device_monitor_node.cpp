@@ -1,7 +1,7 @@
 
 
 #include <ros/ros.h>
-#include "device_monitor/device_monitor.hpp"
+#include "../include/device_monitor/device_monitor.hpp"
 int main(int argc, char** argv)
 {
     ROS_WARN("*****START*****");
